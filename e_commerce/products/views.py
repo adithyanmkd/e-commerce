@@ -1,8 +1,11 @@
 from django.shortcuts import render
 
-# Create your views here.
+# product views
 def index(request):
     return render(request, 'index.html')
 
-def items(request):
+def products(request):
     return render(request, 'products.html')
+
+def item(request):
+    return render(request, 'item.html')
