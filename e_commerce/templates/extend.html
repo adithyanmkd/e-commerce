@@ -13,13 +13,18 @@
 </head>
 
 <body>
-  {% include 'include_files/navbar.html'%} {% block content %}
+  {% block header_tag %}
+  <div class="header">
+    <div class="container"> 
+      {% endblock %}
+  {% include 'include_files/navbar.html'%}
+
+  {% block content %}
   <!-- Feadtued Categories -->
   {% include 'include_files/banner.html' %}
   {% include 'include_files/categories.html'%}
 
   <!-- Featured Products -->
-
   <div class="small-container">
     <h2 class="title">Featured Products</h2>
     <div class="row">
