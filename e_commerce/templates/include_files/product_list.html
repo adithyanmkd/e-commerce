@@ -16,7 +16,7 @@
   <div class="row">
     {% for j in product%}
     <div class="col-4">
-      <a href="{% url 'item' %}"
+      <a href="{% url 'item' j.id %}"
         ><img src="{{ j.image.url}}"
       /></a>
       <h4>{{ j.title }}</h4>
