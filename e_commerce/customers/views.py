@@ -2,28 +2,36 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from . models import Customer
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
+
+def sigh_out(request):
+    logout(request)
+    return redirect('index')
 def user_account(request):
-    form_method = request.POST
-    if form_method:
+    post_method = request.POST
+    user_check = {}
+    if post_method:
         try:
-            if 'login' in form_method:
-                username = form_method.get('username')
-                password = form_method.get('password')
+            if 'login' in post_method:
+                username = post_method.get('username')
+                password = post_method.get('password')
+                user_check['login'] = True
                 
-            elif 'register' in form_method:
-                username = form_method.get('username')
-                email = form_method.get('email')
-                password = form_method.get('password')
-                address = form_method.get('address')
-                phone = form_method.get('phone')
+            elif 'register' in post_method:
+                username = post_method.get('username')
+                email = post_method.get('email')
+                password = post_method.get('password')
+                address = post_method.get('address')
+                phone = post_method.get('phone')
+                user_check['register'] = False
             else:
                 pass
 
             # user accout creation
-
-            user = User.objects.create(
+            print(user_check)
+            user = User.objects.create_user(
                 username = username,
                 password = password,
                 email = email,
@@ -37,8 +45,22 @@ def user_account(request):
                 phone = phone,
                 address = address,
             )
-            return redirect('index')
+            success_message = "registerd successfully"
+            messages.success(request, success_message)
         except Exception as e:
-            error_msg = "user already exist"
+            error_msg = "username already exist"
             messages.error(request, error_msg)
-    return render(request, 'account.html')
+    if post_method:
+        if 'login' in post_method:
+            username = post_method.get('username')
+            password = post_method.get('password')
+            user = authenticate(username=username,
+                                password=password)
+            if user:
+                login(request, user)
+                return redirect('index')
+            else:
+                error_msg = "invalid username or password"
+                print(error_msg)
+                messages.error(request, error_msg)
+    return render(request, 'account.html', user_check)

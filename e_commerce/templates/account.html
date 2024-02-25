@@ -11,6 +11,13 @@
             </div>
             <div class="col-2">
                 <div class="form-container">
+                    <div class="message-container">
+                        {% if messages %}
+                        {% for message in messages %}
+                        <p><b>{{ message }}</b></p>
+                        {% endfor %}
+                        {% endif%}
+                    </div>
                     <div class="form-btn">
                         <span onclick="login()">Login</span>
                         <span onclick="register()">Register</span>
@@ -19,18 +26,12 @@
                     <form id="LoginForm" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="text" name="username" placeholder="Username" maxlength="10" required>
-                        <input type="password" name="password" placeholder="password" minlength="8" required>
+                        <input type="password" name="password" placeholder="password" minlength="6" required>
                         <button type="submit" class="btn" name="login">Login</button>
                         <a href="">Forget Password</a>
                     </form>
-
                     <form id="RegForm" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <p><b>{{ message }}</b></p>
-                        {% endfor %}
-                        {% endif%}
                         <input type="text" name="username" placeholder="Username" maxlength="10" required>
                         <input type="email" name="email" placeholder="Email">
                         <input type="password" name="password" placeholder="Password" minlength="8">
@@ -43,6 +44,7 @@
         </div>
     </div>
 </div>
+
 <script>
     var LoginForm = document.getElementById("LoginForm");
     var RegForm = document.getElementById("RegForm");
@@ -60,4 +62,13 @@
 
     }
 </script>
+{% if register %}
+<script>
+    register()
+</script>
+{% else %}
+<script>
+    login()
+</script>
+{% endif %}
 {% endblock %}
