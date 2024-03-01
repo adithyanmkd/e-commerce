@@ -12,13 +12,11 @@
       <option>Sort By Sale</option>
     </select>
   </div>
-{% for product in item|split:4%}
+  {% for product in item|split:4 %}
   <div class="row">
     {% for j in product%}
     <div class="col-4">
-      <a href="{% url 'item' j.id %}"
-        ><img src="{{ j.image.url}}"
-      /></a>
+      <a href="{% url 'item' j.id %}"><img src="{{ j.image.url}}" /></a>
       <h4>{{ j.title }}</h4>
       <h4><b>₹{{ j.price }}</b></h4>
       <p>{{ j.description }}</p>
