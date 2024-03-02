@@ -1,7 +1,12 @@
-{% extends 'extend.html'%} {% load static %} {% block header_tag%}
-{% endblock %} {% block content %}
+{% extends 'extend.html'%}
+{% load static %}
+{% load mul_tag %}
+{% load add_tag %}
+{% block header_tag %}
+{% endblock %}
+{% block content %}
 <div class="small-container cart-page">
-    {% if cart %}
+    {% if cart and cart.added_item.all %}
     <table>
         <tr>
             <th>Product</th>
@@ -17,28 +22,20 @@
                         <p>{{ cart_item.product.title }}</p>
                         <small>Price ₹{{ cart_item.product.price}}</small>
                         <br>
-                        <a href="">Remove</a>
+                        <a href="{% url 'remove_item' cart_item.id %}">Remove</a>
                     </div>
                 </div>
             </td>
             <td><input type="number" value="{{ cart_item.quantity }}" disabled></td>
-            <td>₹{{ cart_item.product.price}}</td>
+            <td>₹{% mul cart_item.product.price cart_item.quantity %}</td>
         </tr>
         {% endfor %}
     </table>
     <div class="total-price">
         <table>
             <tr>
-                <td>Subtotal</td>
-                <td>$200.00</td>
-            </tr>
-            <tr>
-                <td>Tax</td>
-                <td>$35.00</td>
-            </tr>
-            <tr>
                 <td>Total</td>
-                <td>$230.00</td>
+                <td>₹{% add cart %}</td>
             </tr>
             <tr>
                 <td></td>
