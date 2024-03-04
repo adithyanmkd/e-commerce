@@ -1,0 +1,48 @@
+{% load mul_tag %}
+{% load add_tag %}
+<div class="small-container cart-page">
+    {% if cart and cart.added_item.all %}
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        <tr>
+            {% for cart_item in cart.added_item.all %}
+            <td>
+                <div class="cart-info">
+                    <img src="{{ cart_item.product.image.url }}">
+                    <div>
+                        <p>{{ cart_item.product.title }}</p>
+                        <small>Price ₹{{ cart_item.product.price}}</small>
+                        <br>
+                        <a href="{% url 'remove_item' cart_item.id %}">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type="number" value="{{ cart_item.quantity }}" disabled></td>
+            <td>₹{% mul cart_item.product.price cart_item.quantity %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="total-price">
+        <table>
+            <tr>
+                <td>Total</td>
+                <td>₹{% add cart %}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <form method="post" action="{% url 'checkout' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="total" value="{% add cart %}">
+                    <td><button class="btn" type="submit">Checkout_btn </button></td>
+                </form>
+            </tr>
+        </table>
+    </div>
+</div>
+{% else %}
+<p>Cart is empty</p>
+{% endif %}

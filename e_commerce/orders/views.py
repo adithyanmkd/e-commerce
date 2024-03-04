@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from . models import Order, OrderedItem
 from products.models import Product
+from django.contrib import messages
 
 # cart page
 def cart(request):
@@ -42,6 +43,32 @@ def cart_item_remove(request, item_id):
     if item:
         item.delete()
     return redirect('cart')
+
+def checkout(request):
+    if request.POST:
+        try:
+            user = request.user
+            customer = user.customer_profile
+            total = float(request.POST.get('total'))
+            order_obj= Order.objects.get(
+                owner = customer,
+                order_status = Order.CART_STAGE
+            )
+            if order_obj:
+                order_obj.order_status = Order.ORDER_CONFIRMED
+                order_obj.total_price = total
+                order_obj.save()
+                status_msg = f"Your order confirmed {order_obj.total_price}"
+                messages.success(request, status_msg)
+            else:
+                status_msg = "Unable to process your order try again"
+                messages.error(request, status_msg)
+        except Exception as e:
+            status_msg = "exception msg occured"
+            messages.error(request, status_msg)
+    return redirect('cart')
+
+
 
 
 

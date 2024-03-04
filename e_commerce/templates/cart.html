@@ -1,50 +1,16 @@
 {% extends 'extend.html'%}
 {% load static %}
-{% load mul_tag %}
-{% load add_tag %}
 {% block header_tag %}
 {% endblock %}
 {% block content %}
-<div class="small-container cart-page">
-    {% if cart and cart.added_item.all %}
-    <table>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-        </tr>
-        <tr>
-            {% for cart_item in cart.added_item.all %}
-            <td>
-                <div class="cart-info">
-                    <img src="{{ cart_item.product.image.url }}">
-                    <div>
-                        <p>{{ cart_item.product.title }}</p>
-                        <small>Price ₹{{ cart_item.product.price}}</small>
-                        <br>
-                        <a href="{% url 'remove_item' cart_item.id %}">Remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type="number" value="{{ cart_item.quantity }}" disabled></td>
-            <td>₹{% mul cart_item.product.price cart_item.quantity %}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div class="total-price">
-        <table>
-            <tr>
-                <td>Total</td>
-                <td>₹{% add cart %}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><a type="button" class="btn">Checkout</a></td>
-            </tr>
-        </table>
-    </div>
-</div>
+
+
+{% if messages %}
+{% for message in messages %}
+<li>{{ message }}</li>
+{% endfor %}
 {% else %}
-<p>Cart is empty</p>
+{% include 'include_files/cart_process.html' %}
 {% endif %}
+
 {% endblock %}
