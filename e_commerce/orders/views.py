@@ -3,6 +3,7 @@ from . models import Order, OrderedItem
 from products.models import Product
 from django.contrib import messages
 
+
 # cart page
 def cart(request):
     user = request.user
@@ -67,6 +68,16 @@ def checkout(request):
             status_msg = "exception msg occured"
             messages.error(request, status_msg)
     return redirect('cart')
+
+def order_page(request):
+    user = request.user
+    customer = user.customer_profile
+    user_orders = Order.objects.filter(owner=customer).exclude(order_status=Order.CART_STAGE)
+    kv_pair = {"orders":user_orders}
+    details = kv_pair.get('orders')
+    for i in details:
+        print(f"ID {i.owner.id} Price {i.total_price} Date {i.updated_at} Status {i.order_status}")
+    return render(request, 'orders.html', kv_pair)
 
 
 
